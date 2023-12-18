@@ -1,6 +1,8 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_file
 from datetime import datetime
 import requests
+import base64
+from io import BytesIO
 
 app = Flask(__name__)
 
@@ -31,6 +33,15 @@ def get_filter():
             continue
         return_array.append(i)
     return jsonify(data=return_array)
+
+@app.route('/email_opened/<tid>', methods=['GET'])
+def email_opened(tid):
+    print(tid)
+    transparent_pixel_base64 = 'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
+    return send_file(
+        BytesIO(base64.b64decode(transparent_pixel_base64)),
+        mimetype='image/apng'
+    )
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
